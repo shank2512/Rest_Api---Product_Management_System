@@ -9,7 +9,7 @@ After generating server stub I have written logic to implement each api endpoint
 - Products.json -- To store details about the products in the Inventory
 - Reviews.json -- To store reviews of each products in the Inventory
 - Tokens.json -- To store temporary token generated to verify authenticated and authorized user
-- Users.json -- to store all the users details 
+- Users.json -- To store all the users details 
   
 ### Directions of Use :
   - Generate Access token first to access api endpoints
@@ -32,4 +32,3 @@ To view the Swagger UI interface:
 open http://localhost:8080/docs
 ```
 
-This project leverages the mega-awesome [swagger-tools](https://github.com/apigee-127/swagger-tools) middleware which does most all the work.
