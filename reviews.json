@@ -1,0 +1,20 @@
+[
+  {
+    "id": "dwz15cfgk7ybvpyi",
+    "name": "Nike Shoes",
+    "reviews": [
+      {
+        "review": "this is a best product",
+        "id": "dwz15cfgk7yc40tz"
+      },
+      {
+        "review": "Nike shoes work well and are comfortable",
+        "id": "dwz15cfgk7yc4jd4"
+      },
+      {
+        "review": "this is a bestproduct",
+        "id": "dwz15as0k7yckpim"
+      }
+    ]
+  }
+]

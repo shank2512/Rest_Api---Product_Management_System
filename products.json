@@ -1,0 +1,14 @@
+[
+  {
+    "quantity": 16,
+    "releaseDate": "2016-08-29T09:12:33.001Z",
+    "price": 55,
+    "name": "Nike Shoes",
+    "id": "dwz15cfgk7ybvpyi",
+    "manufacturer": {
+      "name": "Nike",
+      "Website": "https://www.nike.com/",
+      "Phno": "8293832939"
+    }
+  }
+]

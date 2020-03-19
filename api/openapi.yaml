@@ -1,0 +1,601 @@
+openapi: 3.0.0
+info:
+  title: Product_Mgt
+  description: An Api for Management of Products
+  contact:
+    name: Shashank Joshi
+    email: shashankjoshi368@gmail.com
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/
+  description: This is a local host server which will respond to api requests
+paths:
+  /products:
+    get:
+      tags:
+      - Inventory
+      summary: Api endpoint to display all available products
+      description: |
+        It displays all the available products in the inventory
+      operationId: productsGET
+      parameters:
+      - name: limit
+        in: query
+        description: maximum number of records to return in request
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 1
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: It will display all the available products in the inventory
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InventoryItem'
+                x-content-type: application/json
+        "400":
+          description: Incorrect url or bad Input
+      x-swagger-router-controller: Inventory
+    post:
+      tags:
+      - Inventory
+      summary: Adds item to the Inventory
+      description: It adds the item with all its details in inventory
+      operationId: productsPOST
+      requestBody:
+        description: Details about the item you want to add in Inventory
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryItem'
+      responses:
+        "201":
+          description: Item added Succesfully
+        "400":
+          description: Invalid input, object invalid
+        "401":
+          description: Authorization information is missing or invalid.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Inventory
+  /products/{id}:
+    get:
+      tags:
+      - Products
+      summary: Api endpoint to search specific product
+      description: Just provide the Id and find all the product details with that
+        id
+      operationId: productsIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Enter Product Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      x-swagger-router-controller: Products
+    put:
+      tags:
+      - Products
+      summary: Api endpoint to update product details
+      description: Update the existing details of the item such as price , quantity
+        of the product which are subject to change
+      operationId: productsIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: id of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: It is going to return the updated details of the item in the
+          inventory
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/update'
+      responses:
+        "200":
+          description: Product details Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Products
+    delete:
+      tags:
+      - Products
+      summary: Api endpoint to delete the product from inventory
+      description: This endpoint is used for removing the product from the inventory
+      operationId: productsIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: id of the product
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Product is deleted succesfully from the Internet , it will show remaining products in Inventory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryItem'
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Products
+  /products/{id}/reviews:
+    get:
+      tags:
+      - Reviews
+      summary: Api endpoint to display all reviews of particular product
+      description: It will display all the reviews of particular product
+      operationId: productsIdReviewsGET
+      parameters:
+      - name: id
+        in: path
+        description: Enter Product Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Reviews of the product with given id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reviews'
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Reviews
+    post:
+      tags:
+      - Reviews
+      summary: Api endpoint to add review of product
+      description: It adds the review for particular product
+      operationId: addReview
+      parameters:
+      - name: id
+        in: path
+        description: Product id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Returns all the reviews of given product id
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/revw'
+      responses:
+        "201":
+          description: Item added Succesfully
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Reviews
+  /products/{idp}/reviews/{idr}:
+    get:
+      tags:
+      - Reviews
+      summary: Api endpoint to display only the particular review of product
+      description: It will display only the particular review of product
+      operationId: productsIdpReviewsIdrGET
+      parameters:
+      - name: idp
+        in: path
+        description: Enter Product Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: idr
+        in: path
+        description: Enter id of review
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Display review with id(idr) of product with id(idp)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/revw'
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Reviews
+    put:
+      tags:
+      - Reviews
+      summary: Api endpoint to update the review of product
+      description: Change the review of the given product
+      operationId: productsIdpReviewsIdrPUT
+      parameters:
+      - name: idp
+        in: path
+        description: Enter Product Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: idr
+        in: path
+        description: Enter Review id to be updated
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Updated review of the product
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/revw'
+      responses:
+        "200":
+          description: Review of the product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/revw'
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Reviews
+    delete:
+      tags:
+      - Reviews
+      summary: Api endpoint to delete the review of product from inventory
+      description: This endpoint is used for deleting the review product from the
+        inventory
+      operationId: productsIdpReviewsIdrDELETE
+      parameters:
+      - name: idp
+        in: path
+        description: Enter Product Id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: idr
+        in: path
+        description: Enter Review id to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Review to be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reviews'
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        "5XX":
+          description: Unexpected error.
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Reviews
+  /users:
+    get:
+      tags:
+      - Users
+      summary: Api endpoint to display all users
+      description: This api endpoint will display all the users in the system
+      operationId: usersGET
+      parameters:
+      - name: username
+        in: query
+        description: Searches a user  from users database with username query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Displayed all the users succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+      security:
+      - ApiKeyAuth: []
+      x-swagger-router-controller: Users
+    post:
+      tags:
+      - Users
+      summary: Api endpoint to create a user
+      description: This endpoint will create a post request to create a user with
+        the details passed from request body and add the user to the database
+      operationId: usersPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+            example:
+              email: shank@gmail.com
+              name: Shashank Joshi
+              username: shank25
+              contact: 8282828389
+        required: true
+      responses:
+        "200":
+          description: New User created succesfully
+        "4XX":
+          description: Invalid Input or bad url
+      x-swagger-router-controller: Users
+  /users/access:
+    get:
+      tags:
+      - access Token
+      summary: Api endpoint to get access token
+      operationId: usersAccessGET
+      parameters:
+      - name: username
+        in: query
+        description: Username of user in the system
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: shank
+      responses:
+        "200":
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+            application/xml:
+              schema:
+                type: string
+        "400":
+          description: Invalid username
+      x-swagger-router-controller: AccessToken
+components:
+  schemas:
+    InventoryItem:
+      required:
+      - id
+      - manufacturer
+      - name
+      - price
+      - quantity
+      - releaseDate
+      type: object
+      properties:
+        id:
+          type: string
+          description: id will be auto assigned from server
+          example: 4n5pxq24kpiob12og9
+        name:
+          type: string
+          example: Google Lens
+        releaseDate:
+          type: string
+          format: date-time
+          example: 2016-08-29T09:12:33.001Z
+        manufacturer:
+          $ref: '#/components/schemas/Manufacturer'
+        price:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+      example:
+        quantity: 6
+        releaseDate: 2016-08-29T09:12:33.001Z
+        price: 0
+        name: Google Lens
+        id: 4n5pxq24kpiob12og9
+        manufacturer:
+          name: Google Corp
+          Website: https://www.google.com/
+          Phno: "8293832939"
+    Manufacturer:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: Google Corp
+        Website:
+          type: string
+          format: url
+          example: https://www.google.com/
+        Phno:
+          type: string
+          example: "8293832939"
+      example:
+        name: Google Corp
+        Website: https://www.google.com/
+        Phno: "8293832939"
+    update:
+      type: object
+      properties:
+        price:
+          type: integer
+          example: 54
+        quantity:
+          type: integer
+          example: 10
+    user:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 4n5pxq24kpiob12og9
+        username:
+          type: string
+          example: shank2512
+        name:
+          type: string
+          example: Shashank Joshi
+        email:
+          type: string
+          format: email
+          example: shank@gmail.com
+        contact:
+          type: string
+          example: "4859789878"
+      example:
+        contact: "4859789878"
+        name: Shashank Joshi
+        id: 4n5pxq24kpiob12og9
+        email: shank@gmail.com
+        username: shank2512
+    Reviews:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id of product
+        name:
+          type: string
+          description: name of the product
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/revw'
+      example:
+        reviews:
+        - review: review
+          id: id
+        - review: review
+          id: id
+        name: name
+        id: id
+    revw:
+      type: object
+      properties:
+        id:
+          type: string
+          description: review id
+        review:
+          type: string
+          description: review of product
+      example:
+        review: this is a bestproduct
+        id: this is a review id to identify review
+    body:
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        username:
+          type: string
+        contact:
+          type: string
+    inline_response_200:
+      properties:
+        token:
+          type: string
+      example:
+        token: token
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: token
+      in: query
